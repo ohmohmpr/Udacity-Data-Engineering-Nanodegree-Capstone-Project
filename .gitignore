@@ -1,0 +1,13 @@
+key_chron
+airflow/logs
+airflow/postgres-db-volume
+airflow/dags/__pycache__
+airflow/dags/legacy
+airflow/plugins/__pycache__
+work/__pycache__
+work/.*
+work/data/.*
+work/data/*.sas7bdat
+work/delete
+work/stage/.*
+
