@@ -114,6 +114,10 @@ All sas7bdat file are in this folder. You should put the sas7bdat file here. I d
 4. Airflow: For scheduling jobs, create job as pipeline.
 5. Redshift: Handle 1M rows database.
 6. S3: Store parquet file, low cost.
+7. Star schema: 
+    7.1 It is easy to understand and build as you can see I just insert data with a little modification.
+    7.2 When querying data, it is easy to join an additional useful data. No need complex joins. 
+    7.3 Fast aggregations. We can derive better business insights.
 
 ### How often ETL script should be run:
 1. [load_fact_monthly](airflow/dags/load_fact_monthly.py) monthly because I94 data is available once per month
@@ -139,6 +143,9 @@ Redshift is already fine for this answer.
 ![schema-image-fact](image/Cap-data-schema-fact.png)
 
 
+## SAMPLE QUERY 
+It is in IAC step 4 
+[IAC.ipynb](IAC.ipynb)
 
 
 

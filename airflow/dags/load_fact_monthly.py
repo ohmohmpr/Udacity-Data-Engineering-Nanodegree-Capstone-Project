@@ -6,6 +6,7 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow import DAG
 from datetime import datetime
 from sql_queries import SqlQueries
+from data_quality_check_duplicate import DataQualityCheckDuplicateOperator
 
 default_args = {
     "owner": "airflow", 
@@ -87,6 +88,14 @@ run_quality_checks = DataQualityOperator(
     result=0,
 )
 
+checks_immigration_duplicated = DataQualityCheckDuplicateOperator(
+    task_id='checks_immigration_duplicated',
+    dag=dag,
+    redshift_conn_id='redshift',
+    sql=SqlQueries.checks_immigration_duplicated,
+    result="",
+)
+
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
 
 
@@ -94,5 +103,7 @@ start_operator >> upload_local_to_s3_immigrations
 upload_local_to_s3_immigrations >> stage_immigrations_to_redshift
 stage_immigrations_to_redshift >> load_immigrations_fact_table
 load_immigrations_fact_table >> run_quality_checks
+load_immigrations_fact_table >> checks_immigration_duplicated
 run_quality_checks >> end_operator
+checks_immigration_duplicated >> end_operator
 

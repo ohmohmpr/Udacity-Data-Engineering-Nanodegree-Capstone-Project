@@ -166,8 +166,8 @@ dim_i94visa_table_create = ("""
 
 dim_i94port_table_create = ("""
     CREATE TABLE IF NOT EXISTS dim_i94port (
-        city_id                     varchar, 
-        city                        varchar
+        port_code                     varchar, 
+        port                        varchar
     );
 """)
 
@@ -188,7 +188,7 @@ dim_i94cit_res_table_create = ("""
 dim_i94mode_table_create = ("""
     CREATE TABLE IF NOT EXISTS dim_i94mode (
         Transport_Code            varchar, 
-        Transport_Type      varchar
+        Transport_Type            varchar
     );
 """)
 

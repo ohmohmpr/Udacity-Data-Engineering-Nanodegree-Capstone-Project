@@ -34,6 +34,62 @@ class SqlQueries:
         FROM dim_i94mode
         WHERE Transport_Code IS NULL;
     """)
+
+    checks_immigration_duplicated = ("""
+        SELECT "cicid","i94yr","i94mon", COUNT(*)
+        FROM fact_immigrations
+        GROUP BY "cicid","i94yr","i94mon"
+        HAVING COUNT(*)>1
+    """)
+
+    checks_demographics_duplicated = ("""
+        SELECT state_id, COUNT(state_id)
+        FROM dim_demographics
+        GROUP BY state_id
+        HAVING COUNT(state_id)>1
+    """)
+
+    checks_port_duplicated = ("""
+        SELECT port_code, COUNT(port_code)
+        FROM dim_i94port
+        GROUP BY port_code
+        HAVING COUNT(port_code)>1
+    """)
+
+    checks_visa_duplicated = ("""
+        SELECT visa_id, COUNT(visa_id)
+        FROM dim_i94visa
+        GROUP BY visa_id
+        HAVING COUNT(visa_id)>1
+    """)
+
+    checks_addr_duplicated = ("""
+        SELECT state_id, COUNT(state_id)
+        FROM dim_i94addr
+        GROUP BY state_id
+        HAVING COUNT(state_id)>1
+    """)
+
+    checks_i94cit_res_duplicated = ("""
+        SELECT city_id, COUNT(city_id)
+        FROM dim_i94cit_res
+        GROUP BY city_id
+        HAVING COUNT(city_id)>1
+    """)
+
+    checks_mode_duplicated = ("""
+        SELECT Transport_Code, COUNT(Transport_Code)
+        FROM dim_i94mode
+        GROUP BY Transport_Code
+        HAVING COUNT(Transport_Code)>1
+    """)
+
+    checks_mode_duplicated = ("""
+        SELECT Transport_Code, COUNT(Transport_Code)
+        FROM dim_i94mode
+        GROUP BY Transport_Code
+        HAVING COUNT(Transport_Code)>1
+    """)
     
     immigration_fact_table_check_null =  ("""
         SELECT  COUNT(*) 

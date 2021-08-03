@@ -4,7 +4,7 @@ from airflow.operators.bash import BashOperator
 from stage_redshift import StageToRedshiftOperator
 from load_dimension import LoadDimensionOperator
 from data_quality import DataQualityOperator
-
+from data_quality_check_duplicate import DataQualityCheckDuplicateOperator
 from airflow import DAG
 from datetime import datetime
 from sql_queries import SqlQueries
@@ -298,6 +298,54 @@ run_quality_checks_mode = DataQualityOperator(
     result=0,
 )
 
+checks_port_duplicated = DataQualityCheckDuplicateOperator(
+    task_id='checks_port_duplicated',
+    dag=dag,
+    redshift_conn_id='redshift',
+    sql=SqlQueries.checks_port_duplicated,
+    result="",
+)
+
+checks_visa_duplicated = DataQualityCheckDuplicateOperator(
+    task_id='checks_visa_duplicated',
+    dag=dag,
+    redshift_conn_id='redshift',
+    sql=SqlQueries.checks_visa_duplicated,
+    result="",
+)
+
+checks_addr_duplicated = DataQualityCheckDuplicateOperator(
+    task_id='checks_addr_duplicated',
+    dag=dag,
+    redshift_conn_id='redshift',
+    sql=SqlQueries.checks_addr_duplicated,
+    result="",
+)
+
+checks_i94cit_res_duplicated = DataQualityCheckDuplicateOperator(
+    task_id='checks_i94cit_res_duplicated',
+    dag=dag,
+    redshift_conn_id='redshift',
+    sql=SqlQueries.checks_i94cit_res_duplicated,
+    result="",
+)
+
+checks_mode_duplicated = DataQualityCheckDuplicateOperator(
+    task_id='checks_mode_duplicated',
+    dag=dag,
+    redshift_conn_id='redshift',
+    sql=SqlQueries.checks_mode_duplicated,
+    result="",
+)
+
+checks_demographics_duplicated = DataQualityCheckDuplicateOperator(
+    task_id='checks_demographics_duplicated',
+    dag=dag,
+    redshift_conn_id='redshift',
+    sql=SqlQueries.checks_demographics_duplicated,
+    result="",
+)
+
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
 
 start_operator >> upload_local_to_s3_demographic
@@ -335,3 +383,17 @@ run_quality_checks_addr >> end_operator
 run_quality_checks_visa >> end_operator
 run_quality_checks_city >> end_operator
 run_quality_checks_mode >> end_operator
+
+load_demographics_dimension_table >> checks_demographics_duplicated
+load_port_dimension_table >> checks_port_duplicated
+load_addr_dimension_table >> checks_addr_duplicated
+load_visa_dimension_table >> checks_visa_duplicated
+load_cit_res_dimension_table >> checks_i94cit_res_duplicated
+load_mode_dimension_table >> checks_mode_duplicated
+
+checks_demographics_duplicated >> end_operator
+checks_i94cit_res_duplicated >> end_operator
+checks_addr_duplicated >> end_operator
+checks_visa_duplicated >> end_operator
+checks_port_duplicated >> end_operator
+checks_mode_duplicated >> end_operator
